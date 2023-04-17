@@ -97,6 +97,9 @@ int main(int argc, char **argv, char **env)
 	//for(int i=0;i<clkcycles;i++){
 	//for(int i=0;i<pow(2,12);i++){
 		for(int j=0; j<100; j++) {
+			if (top->val_o) {
+				result_tanh[0] = top->tanh_o;
+			}
 			if(j==0) {
 				
 					top->ang_i = startquant;
@@ -110,7 +113,7 @@ int main(int argc, char **argv, char **env)
 					result_tanh[0] = top->tanh_o;
 					//startquant+=sample_width;
 					int val_i = top->val_i;
-					int val_o = top->val_o;
+					//int val_o = top->val_o;
 					int ready_i = top->ready_i;
 					int ready_o = top->ready_o;
 			} else if (j > 10) {
