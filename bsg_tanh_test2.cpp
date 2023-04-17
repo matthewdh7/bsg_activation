@@ -45,7 +45,7 @@ double maxquant = theta_final*pow(2,precision);
 // iterations.
 									  
 // unsigned long int startquant = pow(2,startquant_pow);
-unsigned long int startquant = 165535; //FFFF in hex without the 1
+unsigned long int startquant = 10000; //FFFF in hex without the 1
 
 // The starting quantity is a very important parameter of testing. Due to truncation effect
 // the sense of magnitude of smaller numbers is lost and results in high error. The starting quantity can be
@@ -169,6 +169,7 @@ int main(int argc, char **argv, char **env)
 	// }
 	// aver_squa_err_tanh/=samp_len;
 
+	double input_value_print = startquant/pow(2, precision);
 	double ideal_value_tanh = tanh(startquant/pow(2,precision));
 	double obser_value_tanh = result_tanh[0]/pow(2,precision);
 	float err_tanh = (ideal_value_tanh - obser_value_tanh) / ideal_value_tanh;
@@ -176,12 +177,13 @@ int main(int argc, char **argv, char **env)
 	//float stan_dev_tanh = sqrt(aver_squa_err_tanh);
 	std::cout<<std::endl;
 	std::cout<<std::endl;
-	std::cout<<"Input tested:"<<ideal_value_tanh<<std::endl;
+	std::cout<<"Input tested:"<<input_value_print<<std::endl;
+	std::cout<<"Output expected:"<<ideal_value_tanh<<std::endl;
 	//std::cout<<"Output received:"<<result_tanh[0]<<std::endl;
 	std::cout<<"Output received:"<<obser_value_tanh<<std::endl;
 	//std::cout<<"Maximum Vector tested:"<<maxquant<<std::endl;
 	//std::cout<<"Sampling Interval:"<<sample_width<<std::endl;
-	std::cout<<"Error:"<<err_tanh<<std::endl;
+	std::cout<<"Error:"<<err_tanh*100<<"%"<<std::endl;
 	// std::cout<<"Maximum Error in Hyperbolic Tan:"<<maxerr_tanh<<"%"<<std::endl;
 	// std::cout<<"Standard Deviation observed:"<<stan_dev_tanh<<std::endl;
 	// std::cout<<"Maximum Error Vector:"<<max_err_samp_tanh<<std::endl;

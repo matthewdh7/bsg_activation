@@ -1,6 +1,6 @@
 import sys, math
 
-def bsg_exponential_main_initial(angbitlen, ansbitlen, negprec, posprec, extriter):
+def bsg_exponential_main_initial(angbitlen, ansbitlen, negprec, posprec, extriter, precision):
     print("""
     `include "../../basejump_stl/bsg_misc/bsg_defines.v"
     `include "bsg_idiv_iterative.v"
@@ -10,7 +10,7 @@ def bsg_exponential_main_initial(angbitlen, ansbitlen, negprec, posprec, extrite
     `include "bsg_idiv_iterative_controller.v"
     `include "../../basejump_stl/bsg_misc/bsg_counter_clear_up.v"
     
-    module bsg_tanh #(parameter neg_prec_p=6, posi_prec_p=12, extr_iter_p=1, ans_width_p = 32, ang_width_p = 21)
+    module bsg_tanh #(parameter neg_prec_p=6, posi_prec_p=12, extr_iter_p=1, ans_width_p = 32, ang_width_p = 21, precision=16)
     (
     input clk_i
     ,input signed [ang_width_p-1:0] ang_i
@@ -25,7 +25,7 @@ def bsg_exponential_main_initial(angbitlen, ansbitlen, negprec, posprec, extrite
     logic signed [ans_width_p-1:0] sinh, cosh;
     logic sincosReady, sincosDone, tanReady, tanDone;
     
-    """ %{'s':ansbitlen, 'g':angbitlen, 'n':negprec, 'p':posprec, 'e':extriter})
+    """ %{'s':ansbitlen, 'g':angbitlen, 'n':negprec, 'p':posprec, 'e':extriter, 'c':precision})
     return
 
 
@@ -109,7 +109,7 @@ def main_body_print():
     );
 
     /* tan divider unit */
-    parameter SHFT_AMT = 16;
+    parameter SHFT_AMT = %(shift)d;
     logic [ans_width_p+SHFT_AMT-1:0] sinh_shifted, tanh_shifted, remainder_o, tanh_crop; //L shift by 16
     assign sinh_shifted = {SHFT_AMT'('d0), sinh} << SHFT_AMT;
 
@@ -138,7 +138,7 @@ def main_body_print():
     assign ready_o = (state_r == eWAIT) && (sincosReady);
 
     
-    endmodule""")
+    endmodule""" %{'shift': precision})
     return
     
 angbitlen = (int)(sys.argv[1])
@@ -162,7 +162,7 @@ startquant_pow = (int)(sys.argv[6])
 
 extriter = 1
 
-bsg_exponential_main_initial(angbitlen, ansbitlen, negprec, posprec, extriter)
+bsg_exponential_main_initial(angbitlen, ansbitlen, negprec, posprec, extriter, precision)
 # lookup=lookup_compute(negprec, posprec, precision)
 # bsg_lookup_initialization(negprec, posprec, angbitlen,lookup)
 # constant=constant_compute(negprec, posprec)*(2**precision)

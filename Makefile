@@ -35,7 +35,7 @@ VLINT_OFF = -Wno-UNUSED
 #use VERILATOR_PATH to point to the installed 'verilator' executable.
 #Use 'make run VERILATOR_PATH=where/verilator/is/installed/verilator-'version'/bin/verilator'
 
-VERILATOR_PATH := ../../verilator/install/bin/verilator
+VERILATOR_PATH := $$HOME/verilator/install/bin/verilator
 
 run: $(VERI_DIR)/Vbsg_tanh
 	$(VERI_DIR)/Vbsg_tanh

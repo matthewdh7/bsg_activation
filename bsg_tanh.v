@@ -7,7 +7,7 @@
     `include "bsg_idiv_iterative_controller.v"
     `include "../../basejump_stl/bsg_misc/bsg_counter_clear_up.v"
     
-    module bsg_tanh #(parameter neg_prec_p=6, posi_prec_p=12, extr_iter_p=1, ans_width_p = 32, ang_width_p = 21)
+    module bsg_tanh #(parameter neg_prec_p=6, posi_prec_p=12, extr_iter_p=1, ans_width_p = 32, ang_width_p = 21, precision=16)
     (
     input clk_i
     ,input signed [ang_width_p-1:0] ang_i
