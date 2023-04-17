@@ -2,7 +2,7 @@
 #Use 'make run' to to run the executable and compute the error analysis.
 #TRACE variable is used to enable tracing. While doing 'make run' give 
 #variable value of TRACE=1 at command line;Use 'make run TRACE=1.
-
+.ONESHELL: 
 .PHONY: clean
 
 FILE_DEL = $(VERI_DIR) CORDIC_tanh.vcd params_def.h bsg_tanh.v
@@ -56,3 +56,15 @@ $(GENERATED_VERILOG_FILE):
 
 clean:
 		rm -rf $(FILE_DEL)
+
+setup:
+	cd $$HOME/verilator
+	autoconf
+	./configure --prefix=$$PWD/install
+	make -j8
+	make install
+
+	export VERILATOR_ROOT=$$HOME/verilator
+	export PATH=$$PATH:$$VERILATOR_ROOT/bin
+# export VERILATOR_ROOT=$HOME/verilator
+# export PATH=$PATH:$VERILATOR_ROOT/bin

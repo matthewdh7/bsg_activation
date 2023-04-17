@@ -45,7 +45,7 @@ double maxquant = theta_final*pow(2,precision);
 // iterations.
 									  
 // unsigned long int startquant = pow(2,startquant_pow);
-unsigned long int startquant = 65535; //FFFF in hex
+unsigned long int startquant = 165535; //FFFF in hex without the 1
 
 // The starting quantity is a very important parameter of testing. Due to truncation effect
 // the sense of magnitude of smaller numbers is lost and results in high error. The starting quantity can be
@@ -176,8 +176,8 @@ int main(int argc, char **argv, char **env)
 	//float stan_dev_tanh = sqrt(aver_squa_err_tanh);
 	std::cout<<std::endl;
 	std::cout<<std::endl;
-	std::cout<<"Input tested:"<<startquant_print<<std::endl;
-	std::cout<<"Output received:"<<result_tanh[0]<<std::endl;
+	std::cout<<"Input tested:"<<ideal_value_tanh<<std::endl;
+	//std::cout<<"Output received:"<<result_tanh[0]<<std::endl;
 	std::cout<<"Output received:"<<obser_value_tanh<<std::endl;
 	//std::cout<<"Maximum Vector tested:"<<maxquant<<std::endl;
 	//std::cout<<"Sampling Interval:"<<sample_width<<std::endl;
