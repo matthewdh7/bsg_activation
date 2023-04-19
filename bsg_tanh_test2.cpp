@@ -56,13 +56,14 @@ unsigned long int startquant = 10000; //FFFF in hex without the 1
 // using some careful fixed point respresentation and it is highly advised to retain
 // at least 8-12 bits for decimal point to get above rated results.
 
-unsigned long int numsamples = (pow(2,anglen-1)-1);
+// unsigned long int numsamples = (pow(2,anglen-1)-1);
+unsigned long int numsamples = 5;
 
 // While testing please be very careful of the number of samples. Sometimes the
 // anglen can make the sample_width = 0 which will definitely result in unnecessary
 // high errors. If the test fails, the first thing to check is `sample_width`.
 
-unsigned long int sample_width = round((maxquant-startquant)/numsamples);
+// unsigned long int sample_width = round((maxquant-startquant)/numsamples);
 																			
 unsigned long int startquant_print = startquant;	
 														
@@ -95,16 +96,16 @@ int main(int argc, char **argv, char **env)
 	#endif
 
 	//for(int i=0;i<clkcycles;i++){
-	//for(int i=0;i<pow(2,12);i++){
+	for(int i=0;i<numsamples;i++){
 		for(int j=0; j<100; j++) {
 			if (top->val_o) {
-				result_tanh[0] = top->tanh_o;
+				result_tanh[i] = top->tanh_o;
 			}
 			if(j==0) {
 				
-					top->ang_i = startquant;
-					// samples[0] = startquant;
-					// samp_len++;
+					top->ang_i = startquant*(i+1);
+					samples[i] = startquant*(i+1);
+					samp_len++;
 					
 
 					top->val_i = valid_in;
@@ -113,7 +114,7 @@ int main(int argc, char **argv, char **env)
 					result_tanh[0] = top->tanh_o;
 					//startquant+=sample_width;
 					int val_i = top->val_i;
-					//int val_o = top->val_o;
+					int val_o = top->val_o;
 					int ready_i = top->ready_i;
 					int ready_o = top->ready_o;
 			} else if (j > 10) {
@@ -122,14 +123,14 @@ int main(int argc, char **argv, char **env)
 			while(main_time<10){
 
 				#if VM_TRACE
-				tfp->dump (main_time+j*10);
+				tfp->dump (main_time+j*10+i*1000);
 				#endif
 
 				if((main_time%10)==0){			
 					top->clk_i = 1;
 					}			
 				
-				if((main_time%10)==6){
+				if((main_time%10)==5){
 					top->clk_i = 0;
 				}
 				top->eval();
@@ -139,35 +140,45 @@ int main(int argc, char **argv, char **env)
 			}
 			main_time = 0;
 		}
-	//}	
+	}	
 
     // double aver_squa_err_tanh = 0;
 
 	// double aver_err_sinh, aver_err_cosh, aver_err_tanh;
 
-    // float maxerr_tanh = 0;
+    float maxerr_tanh = 0;
+	float avgerr_tanh;
 
-    // double max_err_samp_tanh;
+    double max_err_samp_tanh;
 
-	// for(int i=0;i<samp_len;i++){
-	// 	float samp = samples[i]/pow(2,precision);
+	for(int i=0;i<samp_len;i++){
+		float samp = samples[i]/pow(2,precision);
 
-    //     double ideal_value_tanh = tanh(samp);
+        double ideal_value_tanh = tanh(samp);
 
-    //     double obser_value_tanh = result_tanh[i+(negprec+posiprec+1+2)]/pow(2,precision);
+        //double obser_value_tanh = result_tanh[i+(negprec+posiprec+1+2)]/pow(2,precision);
+		double obser_value_tanh = result_tanh[i]/pow(2,precision);
 
-    //     float err_tanh = (ideal_value_tanh - obser_value_tanh)/ideal_value_tanh;
+        float err_tanh = (ideal_value_tanh - obser_value_tanh)/ideal_value_tanh;
 
-    //     double tanh_err = err_tanh*err_tanh;
+		avgerr_tanh += err_tanh;
 
-    //     aver_squa_err_tanh+=tanh_err;
+        //double tanh_err = err_tanh*err_tanh;
 
-    //     if(maxerr_tanh<fabs(err_tanh)){
-	// 		maxerr_tanh = err_tanh;
-	// 		max_err_samp_tanh = samp;
-	// 	}
-	// }
+        //aver_squa_err_tanh+=tanh_err;
+
+        if(maxerr_tanh<fabs(err_tanh)){
+			maxerr_tanh = err_tanh;
+			max_err_samp_tanh = samp;
+		}
+		std::cout<<std::endl;
+		std::cout<<"Input "<<i+1<<" tested:"<<samp<<std::endl;
+		std::cout<<"Output expected:"<<ideal_value_tanh<<std::endl;
+		std::cout<<"Output received:"<<obser_value_tanh<<std::endl;
+		std::cout<<"Error:"<<err_tanh*100<<"%"<<std::endl;
+	}
 	// aver_squa_err_tanh/=samp_len;
+	avgerr_tanh /= numsamples;
 
 	double input_value_print = startquant/pow(2, precision);
 	double ideal_value_tanh = tanh(startquant/pow(2,precision));
@@ -177,16 +188,8 @@ int main(int argc, char **argv, char **env)
 	//float stan_dev_tanh = sqrt(aver_squa_err_tanh);
 	std::cout<<std::endl;
 	std::cout<<std::endl;
-	std::cout<<"Input tested:"<<input_value_print<<std::endl;
-	std::cout<<"Output expected:"<<ideal_value_tanh<<std::endl;
-	//std::cout<<"Output received:"<<result_tanh[0]<<std::endl;
-	std::cout<<"Output received:"<<obser_value_tanh<<std::endl;
-	//std::cout<<"Maximum Vector tested:"<<maxquant<<std::endl;
-	//std::cout<<"Sampling Interval:"<<sample_width<<std::endl;
-	std::cout<<"Error:"<<err_tanh*100<<"%"<<std::endl;
-	// std::cout<<"Maximum Error in Hyperbolic Tan:"<<maxerr_tanh<<"%"<<std::endl;
-	// std::cout<<"Standard Deviation observed:"<<stan_dev_tanh<<std::endl;
-	// std::cout<<"Maximum Error Vector:"<<max_err_samp_tanh<<std::endl;
+	
+	std::cout<<"Average error:"<<avgerr_tanh*100<<"%"<<std::endl;
 
 	#if VM_TRACE
 	tfp->close();

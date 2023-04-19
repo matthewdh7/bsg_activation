@@ -22,6 +22,7 @@ void Vbsg_tanh::eval_step() {
     QData __Vchange = 1;
     do {
         VL_DEBUG_IF(VL_DBG_MSGF("+ Clock loop\n"););
+        vlSymsp->__Vm_activity = true;
         _eval(vlSymsp);
         if (VL_UNLIKELY(++__VclockLoop > 100)) {
             // About to fail, so enable debug to see what's not settling.
@@ -42,6 +43,7 @@ void Vbsg_tanh::eval_step() {
 void Vbsg_tanh::_eval_initial_loop(Vbsg_tanh__Syms* __restrict vlSymsp) {
     vlSymsp->__Vm_didInit = true;
     _eval_initial(vlSymsp);
+    vlSymsp->__Vm_activity = true;
     // Evaluate till stable
     int __VclockLoop = 0;
     QData __Vchange = 1;
@@ -73,6 +75,7 @@ VL_INLINE_OPT void Vbsg_tanh::_sequent__TOP__1(Vbsg_tanh__Syms* __restrict vlSym
     // Body
     __Vdly__bsg_tanh__DOT__divider__DOT__control__DOT__calc_cnt 
         = vlTOPp->bsg_tanh__DOT__divider__DOT__control__DOT__calc_cnt;
+    vlTOPp->bsg_tanh__DOT__divider__DOT__control__DOT__add2_neg_last_r = 0U;
     vlTOPp->bsg_tanh__DOT__state_r = vlTOPp->bsg_tanh__DOT__state_n;
     if ((1U & (~ (IData)(vlTOPp->bsg_tanh__DOT__sinhcosh__DOT__stall_pipe)))) {
         vlTOPp->bsg_tanh__DOT__sinhcosh__DOT__ang[0U] 
@@ -4576,6 +4579,7 @@ void Vbsg_tanh::_eval(Vbsg_tanh__Syms* __restrict vlSymsp) {
     // Body
     if (((IData)(vlTOPp->clk_i) & (~ (IData)(vlTOPp->__Vclklast__TOP__clk_i)))) {
         vlTOPp->_sequent__TOP__1(vlSymsp);
+        vlTOPp->__Vm_traceActivity[1U] = 1U;
     }
     vlTOPp->_combo__TOP__3(vlSymsp);
     // Final

@@ -3965,6 +3965,8 @@ void Vbsg_tanh::_eval_settle(Vbsg_tanh__Syms* __restrict vlSymsp) {
     Vbsg_tanh* const __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
     // Body
     vlTOPp->_settle__TOP__2(vlSymsp);
+    vlTOPp->__Vm_traceActivity[1U] = 1U;
+    vlTOPp->__Vm_traceActivity[0U] = 1U;
 }
 
 void Vbsg_tanh::_ctor_var_reset() {
@@ -3980,6 +3982,7 @@ void Vbsg_tanh::_ctor_var_reset() {
     val_o = VL_RAND_RESET_I(1);
     bsg_tanh__DOT__state_r = VL_RAND_RESET_I(2);
     bsg_tanh__DOT__state_n = VL_RAND_RESET_I(2);
+    bsg_tanh__DOT__tanh_crop = VL_RAND_RESET_Q(48);
     VL_RAND_RESET_W(672, bsg_tanh__DOT__sinhcosh__DOT__x);
     VL_RAND_RESET_W(672, bsg_tanh__DOT__sinhcosh__DOT__y);
     VL_RAND_RESET_W(441, bsg_tanh__DOT__sinhcosh__DOT__ang);
@@ -4005,6 +4008,8 @@ void Vbsg_tanh::_ctor_var_reset() {
     bsg_tanh__DOT__divider__DOT__opB_inv_lo = VL_RAND_RESET_I(1);
     bsg_tanh__DOT__divider__DOT__opA_clr_lo = VL_RAND_RESET_I(1);
     bsg_tanh__DOT__divider__DOT__opB_clr_lo = VL_RAND_RESET_I(1);
+    bsg_tanh__DOT__divider__DOT__add2_in0 = VL_RAND_RESET_Q(49);
+    bsg_tanh__DOT__divider__DOT__add2_in1 = VL_RAND_RESET_Q(49);
     bsg_tanh__DOT__divider__DOT__adder1_cin_lo = VL_RAND_RESET_I(1);
     VL_RAND_RESET_W(147, bsg_tanh__DOT__divider__DOT____Vcellinp__genblk2__DOT__muxB__data_i);
     VL_RAND_RESET_W(147, bsg_tanh__DOT__divider__DOT____Vcellinp__genblk2__DOT__muxC__data_i);
@@ -4066,6 +4071,7 @@ void Vbsg_tanh::_ctor_var_reset() {
     bsg_tanh__DOT__divider__DOT__control__DOT__r_neg_r = VL_RAND_RESET_I(1);
     bsg_tanh__DOT__divider__DOT__control__DOT__neg_ld = VL_RAND_RESET_I(1);
     bsg_tanh__DOT__divider__DOT__control__DOT__add1_neg_last_r = VL_RAND_RESET_I(1);
+    bsg_tanh__DOT__divider__DOT__control__DOT__add2_neg_last_r = VL_RAND_RESET_I(1);
     bsg_tanh__DOT__divider__DOT__control__DOT__state = VL_RAND_RESET_I(6);
     bsg_tanh__DOT__divider__DOT__control__DOT__next_state = VL_RAND_RESET_I(6);
     bsg_tanh__DOT__divider__DOT__control__DOT__calc_cnt = VL_RAND_RESET_I(6);
@@ -4428,4 +4434,7 @@ void Vbsg_tanh::_ctor_var_reset() {
     __Vtable1_bsg_tanh__DOT__state_n[253] = 2U;
     __Vtable1_bsg_tanh__DOT__state_n[254] = 3U;
     __Vtable1_bsg_tanh__DOT__state_n[255] = 0U;
+    for (int __Vi0=0; __Vi0<2; ++__Vi0) {
+        __Vm_traceActivity[__Vi0] = VL_RAND_RESET_I(1);
+    }
 }

@@ -13,6 +13,8 @@
 //==========
 
 class Vbsg_tanh__Syms;
+class Vbsg_tanh_VerilatedVcd;
+
 
 //----------
 
@@ -106,6 +108,7 @@ VL_MODULE(Vbsg_tanh) {
         CData/*0:0*/ bsg_tanh__DOT__divider__DOT__control__DOT__r_neg_r;
         CData/*0:0*/ bsg_tanh__DOT__divider__DOT__control__DOT__neg_ld;
         CData/*0:0*/ bsg_tanh__DOT__divider__DOT__control__DOT__add1_neg_last_r;
+        CData/*0:0*/ bsg_tanh__DOT__divider__DOT__control__DOT__add2_neg_last_r;
         CData/*5:0*/ bsg_tanh__DOT__divider__DOT__control__DOT__state;
         CData/*5:0*/ bsg_tanh__DOT__divider__DOT__control__DOT__next_state;
         CData/*5:0*/ bsg_tanh__DOT__divider__DOT__control__DOT__calc_cnt;
@@ -164,9 +167,9 @@ VL_MODULE(Vbsg_tanh) {
         CData/*2:0*/ bsg_tanh__DOT__divider__DOT__genblk2__DOT__muxC__DOT__reduce__BRA__1__KET____DOT__gather;
         CData/*2:0*/ bsg_tanh__DOT__divider__DOT__genblk2__DOT__muxC__DOT__reduce__BRA__2__KET____DOT__gather;
         CData/*2:0*/ bsg_tanh__DOT__divider__DOT__genblk2__DOT__muxC__DOT__reduce__BRA__3__KET____DOT__gather;
-        CData/*2:0*/ bsg_tanh__DOT__divider__DOT__genblk2__DOT__muxC__DOT__reduce__BRA__4__KET____DOT__gather;
     };
     struct {
+        CData/*2:0*/ bsg_tanh__DOT__divider__DOT__genblk2__DOT__muxC__DOT__reduce__BRA__4__KET____DOT__gather;
         CData/*2:0*/ bsg_tanh__DOT__divider__DOT__genblk2__DOT__muxC__DOT__reduce__BRA__5__KET____DOT__gather;
         CData/*2:0*/ bsg_tanh__DOT__divider__DOT__genblk2__DOT__muxC__DOT__reduce__BRA__6__KET____DOT__gather;
         CData/*2:0*/ bsg_tanh__DOT__divider__DOT__genblk2__DOT__muxC__DOT__reduce__BRA__7__KET____DOT__gather;
@@ -219,14 +222,19 @@ VL_MODULE(Vbsg_tanh) {
         WData/*639:0*/ bsg_tanh__DOT__sinhcosh__DOT__y_ans[20];
         WData/*419:0*/ bsg_tanh__DOT__sinhcosh__DOT__ang_ans[14];
         IData/*19:0*/ bsg_tanh__DOT__sinhcosh__DOT__val_ans;
+        QData/*47:0*/ bsg_tanh__DOT__tanh_crop;
         QData/*48:0*/ bsg_tanh__DOT__divider__DOT__opA_mux;
         QData/*48:0*/ bsg_tanh__DOT__divider__DOT__add1_out;
         QData/*48:0*/ bsg_tanh__DOT__divider__DOT__opB_mux;
         QData/*48:0*/ bsg_tanh__DOT__divider__DOT__opC_mux;
+        QData/*48:0*/ bsg_tanh__DOT__divider__DOT__add2_in0;
+        QData/*48:0*/ bsg_tanh__DOT__divider__DOT__add2_in1;
         WData/*97:0*/ bsg_tanh__DOT__divider__DOT__muxA__DOT__data_masked[4];
         QData/*48:0*/ bsg_tanh__DOT__divider__DOT__opA_reg__DOT__data_r;
         QData/*48:0*/ bsg_tanh__DOT__divider__DOT__opB_reg__DOT__data_r;
         QData/*48:0*/ bsg_tanh__DOT__divider__DOT__opC_reg__DOT__data_r;
+    };
+    struct {
         WData/*146:0*/ bsg_tanh__DOT__divider__DOT__genblk2__DOT__muxB__DOT__data_masked[5];
         WData/*146:0*/ bsg_tanh__DOT__divider__DOT__genblk2__DOT__muxC__DOT__data_masked[5];
     };
@@ -238,6 +246,7 @@ VL_MODULE(Vbsg_tanh) {
     WData/*97:0*/ bsg_tanh__DOT__divider__DOT____Vcellinp__muxA__data_i[4];
     WData/*146:0*/ bsg_tanh__DOT__divider__DOT____Vcellinp__genblk2__DOT__muxB__data_i[5];
     WData/*146:0*/ bsg_tanh__DOT__divider__DOT____Vcellinp__genblk2__DOT__muxC__data_i[5];
+    CData/*0:0*/ __Vm_traceActivity[2];
     static CData/*1:0*/ __Vtable1_bsg_tanh__DOT__state_n[256];
     
     // INTERNAL VARIABLES
@@ -254,6 +263,8 @@ VL_MODULE(Vbsg_tanh) {
     Vbsg_tanh(const char* name = "TOP");
     /// Destroy the model; called (often implicitly) by application code
     ~Vbsg_tanh();
+    /// Trace signals in the model; called by application code
+    void trace(VerilatedVcdC* tfp, int levels, int options = 0);
     
     // API METHODS
     /// Evaluate the model.  Application must call when inputs change.
@@ -287,6 +298,16 @@ VL_MODULE(Vbsg_tanh) {
     static void _eval_settle(Vbsg_tanh__Syms* __restrict vlSymsp) VL_ATTR_COLD;
     static void _sequent__TOP__1(Vbsg_tanh__Syms* __restrict vlSymsp);
     static void _settle__TOP__2(Vbsg_tanh__Syms* __restrict vlSymsp) VL_ATTR_COLD;
+  private:
+    static void traceChgSub0(void* userp, VerilatedVcd* tracep);
+    static void traceChgTop0(void* userp, VerilatedVcd* tracep);
+    static void traceCleanup(void* userp, VerilatedVcd* /*unused*/);
+    static void traceFullSub0(void* userp, VerilatedVcd* tracep) VL_ATTR_COLD;
+    static void traceFullTop0(void* userp, VerilatedVcd* tracep) VL_ATTR_COLD;
+    static void traceInitSub0(void* userp, VerilatedVcd* tracep) VL_ATTR_COLD;
+    static void traceInitTop(void* userp, VerilatedVcd* tracep) VL_ATTR_COLD;
+    void traceRegister(VerilatedVcd* tracep) VL_ATTR_COLD;
+    static void traceInit(void* userp, VerilatedVcd* tracep, uint32_t code) VL_ATTR_COLD;
 } VL_ATTR_ALIGNED(VL_CACHE_LINE_BYTES);
 
 //----------
